@@ -2,62 +2,88 @@ import { POST_METHOD } from '@/constants'
 import { request } from '@umijs/max'
 
 export const profile = async (
-    options?: { [key: string]: any }
+  options?: { [key: string]: any }
 ) => {
-    return request<API.Result<API_USER.UserVo>>('/user/profile', {
-        method: POST_METHOD,
-        ...(options || {})
-    })
+  return request<API_COMMON.Result<API_USER.User>>('/user/profile', {
+    method: POST_METHOD,
+    ...(options || {})
+  })
 }
 
 export const updateUser = async (
-    params: {
-        id: string;
-        phone: string;
-        realName: string;
-        avatar: string;
-        gender: number;
-        status: number;
-        roleIds: Array<string>;
-        isUpdateStatus: boolean;
-    },
-    options?: { [key: string]: any }
+  params: API_USER.User,
+  options?: { [key: string]: any }
 ) => {
-    return request<API.Result<void>>('/user/updateUser', {
-        method: POST_METHOD,
-        data: { ...params },
-        ...(options || {})
-    });
+  return request<API_COMMON.Result<void>>('/user/updateUser', {
+    method: POST_METHOD,
+    data: { ...params },
+    ...(options || {})
+  });
 }
 
 export const selectPageUser = async (
-    params: {
-        id?: string;
-        username?: string;
-        realName?: string;
-        phone?: string;
-        status?: boolean;
-        current?: number;
-        pageSize?: number;
-    },
-    options?: { [key: string]: any }
+  params: API_USER.User & API_COMMON.PageParams,
+  options?: { [key: string]: any }
 ) => {
-    return request<API.Result<API.Page<API.UserVo>>>('/user/selectPageUser', {
-        method: POST_METHOD,
-        data: { ...params },
-        ...(options || {})
-    });
+  return request<API_COMMON.Result<API_COMMON.Page<API_USER.User>>>('/user/selectPageUser', {
+    method: POST_METHOD,
+    data: { ...params },
+    ...(options || {})
+  });
 }
 
 export const selectOneUser = async (
-    params: {
-        id: string;
-    },
-    options?: { [key: string]: any }
+  params: {
+    id: string;
+  },
+  options?: { [key: string]: any }
 ) => {
-    return request<API.Result<API.UserVo>>('/user/selectOneUser', {
-        method: POST_METHOD,
-        data: { ...params },
-        ...(options || {})
-    });
+  return request<API_COMMON.Result<API_USER.User>>('/user/selectOneUser', {
+    method: POST_METHOD,
+    data: { ...params },
+    ...(options || {})
+  });
+}
+
+export const selectPageRole = async (
+  params: {
+    roleName?: string;
+    status?: boolean;
+  },
+  options?: { [key: string]: any }
+) => {
+  return request<API_COMMON.Result<API_USER.Role>>('/user/selectPageRole', {
+    method: POST_METHOD,
+    data: { ...params },
+    ...(options || {})
+  })
+}
+
+export const selectListRole = async (
+  params: {
+    roleName?: string;
+    status?: boolean;
+  },
+  options?: { [key: string]: any }
+) => {
+  return request<API_COMMON.Result<API_USER.Role[]>>('/user/selectListRole', {
+    method: POST_METHOD,
+    data: { ...params },
+    ...(options || {})
+  })
+}
+
+export const selectListPerm = async (
+  params: {
+    permName?: string;
+    permKey?: string;
+    status?: boolean;
+  },
+  options?: { [key: string]: any }
+) => {
+  return request<API_COMMON.Result<Array<API_USER.Perm>>>('/user/selectListPerm', {
+    method: POST_METHOD,
+    data: { ...params },
+    ...(options || {})
+  })
 }

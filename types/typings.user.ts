@@ -1,6 +1,9 @@
+// @ts-ignore
+/* eslint-disable */
+
 declare namespace API_USER {
-  
-  type UserVo = {
+
+  type User = {
     id?: string;
     username?: string;
     phone?: string;
@@ -10,21 +13,22 @@ declare namespace API_USER {
     status?: number;
     createTime?: string;
     updateTime?: string;
-    roles?: Array<RoleVo>;
-    perms?: Array<PermVo>;
+    roles?: { roleId: string, roleName: string }[];
+    roleIds?: string[];
+    perms?: Perm[];
   }
 
-  type RoleVo = {
+  type Role = {
     id?: string;
     roleName?: string;
     orderNum?: number;
     status?: number;
     createTime?: string;
     updateTime?: string;
-    perms?: Array<PermVo>;
+    perms?: Perm[];
   }
 
-  type PermVo = {
+  type Perm = {
     id?: string;
     parentId?: string;
     permName?: string;
@@ -36,6 +40,6 @@ declare namespace API_USER {
     status?: number;
     createTime?: string;
     updateTime?: string;
-    children?: Array<PermVo>;
+    children?: Perm[];
   }
 }
