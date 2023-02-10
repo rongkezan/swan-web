@@ -14,7 +14,7 @@ export default () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const [roleOptions, setRoleOptions] = useState<Array<API_USER.Role>>([])
+  const [roleOptions, setRoleOptions] = useState<Array<API_USER.User>>([])
 
   const actionRef = useRef<ActionType>();
 
@@ -22,7 +22,7 @@ export default () => {
     const loadRoles = async () => {
       const res = await selectListRole({})
       if (res.success) {
-        setRoleOptions(res.data as Array<API_USER.Role>)
+        setRoleOptions(res.data as Array<API_USER.User>)
       } else {
         message.error(res.msg)
       }

@@ -1,46 +1,45 @@
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormSelect, ProFormText, PageContainer } from '@ant-design/pro-components';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormText, PageContainer, ProFormDigit } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, Form, message } from 'antd';
+import { Button, Form, Input, message, Popconfirm, Space, Tree } from 'antd';
 import services from '@/services';
 import { useEffect, useRef, useState } from 'react';
-import { selectListRole } from '@/services/user/UserController';
+import { selectListPerm, selectPageRole } from '@/services/user/UserController';
+import { STATUS_OPTIONS } from '@/constants';
 
-const { selectPageUser, updateUser } = services.UserController;
+const { saveRole } = services.UserController;
 
 export default () => {
 
-  const [form] = Form.useForm<API_USER.User>();
+  const [form] = Form.useForm<API_USER.Role>();
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const [roleOptions, setRoleOptions] = useState<Array<API_USER.Role>>([])
+  const [modalTreeData, setModalTreeData] = useState([])
+
+  const [checkedPermKeys, setCheckedPermKeys] = useState([])
 
   const actionRef = useRef<ActionType>();
 
-  useEffect(() => {
-    const loadRoles = async () => {
-      const res = await selectListRole({})
-      if (res.success) {
-        setRoleOptions(res.data as Array<API_USER.Role>)
-      } else {
-        message.error(res.msg)
-      }
-    }
-    loadRoles()
-  }, [])
+  const onCheckPermissions = (checkedKeys: any) => {
+    setCheckedPermKeys(checkedKeys)
+  }
 
-  const onEdit = (values: API_USER.User) => {
+  const onEdit = (record: API_USER.Role) => {
     form.resetFields()
     form.setFieldsValue({
-      ...values,
-      roleIds: values.roles?.map(role => (role.roleId))
+      ...record,
+      permIds: record.perms?.map(perm => (perm.id))
     })
     setIsModalOpen(true)
   }
 
-  const onFinish = async (values: API_USER.User) => {
-    const res = await updateUser(values)
+  const onDelete = (record: API_USER.Role) => {
+    console.log(record)
+  }
+
+  const onFinish = async (record: API_USER.Role) => {
+    const res = await saveRole(record)
     if (res.success) {
       message.success('提交成功');
       actionRef.current?.reload?.()
@@ -51,23 +50,19 @@ export default () => {
     }
   }
 
-  const columns: ProColumns<API_USER.User>[] = [
+  const columns: ProColumns<API_USER.Role>[] = [
     {
       dataIndex: 'ID',
       valueType: 'indexBorder',
       width: 48,
     },
     {
-      title: '用户名',
-      dataIndex: 'username'
+      title: '角色名',
+      dataIndex: 'roleName'
     },
     {
-      title: '手机号',
-      dataIndex: 'phone'
-    },
-    {
-      title: '真实姓名',
-      dataIndex: 'realName'
+      title: '显示排序',
+      dataIndex: 'orderNum'
     },
     {
       title: '状态',
@@ -92,11 +87,22 @@ export default () => {
       key: 'option',
       render: (_, record) => {
         return (
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<EditOutlined />}
-            onClick={() => onEdit(record)} />
+          <Space>
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => onEdit(record)} />
+            <Popconfirm title="确认要删除吗" onConfirm={() => onDelete(record)} okText="确认" cancelText="取消">
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
+          </Space>
+
         )
       }
     },
@@ -104,8 +110,9 @@ export default () => {
 
   return (
     <PageContainer>
-      <ModalForm<API_USER.User>
+      <ModalForm<API_USER.Role>
         title="用户信息"
+        width={400}
         form={form}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
@@ -113,54 +120,32 @@ export default () => {
         onFinish={onFinish}
       >
         <ProForm.Group>
-          <ProFormText width="md" name="id" label="用户ID" disabled />
-          <ProFormText width="md" name="username" label="用户名" disabled />
-          <ProFormText width="md" name="phone" label="手机号" placeholder="请输入" />
-          <ProFormText width="md" name="realName" label="真实姓名" placeholder="请输入" />
-          <ProFormText width="md" name="avatar" label="头像" placeholder="请输入" />
-          <ProFormSelect width="md"
-            name="roleIds"
-            label="角色"
-            mode="multiple"
-            options={roleOptions.map(role => ({ label: role.roleName, value: role.id }))}
-          />
-          <ProFormRadio.Group
-            name="gender"
-            label="性别"
-            options={[
-              {
-                label: '男',
-                value: 1,
-              },
-              {
-                label: '女',
-                value: 2,
-              }
-            ]}
-          />
+          <ProFormText width="md" name="id" label="角色ID" disabled />
+          <ProFormText width="md" name="roleName" label="角色名" placeholder="请输入" />
+          <ProFormDigit width="xs" name="orderNum" label="显示排序" placeholder="请输入" />
           <ProFormRadio.Group
             name="status"
-            width="md"
+            width="lg"
             label="状态"
-            options={[
-              {
-                label: '禁用',
-                value: false,
-              },
-              {
-                label: '启用',
-                value: true,
-              }
-            ]}
+            options={STATUS_OPTIONS}
           />
+          <Form.Item label="菜单权限">
+            <Tree
+              checkable
+              onCheck={onCheckPermissions}
+              checkedKeys={checkedPermKeys}
+              treeData={modalTreeData}
+            />
+          </Form.Item>
+
         </ProForm.Group>
       </ModalForm>
-      <ProTable<API_USER.User>
+      <ProTable<API_USER.Role>
         columns={columns}
         cardBordered
         actionRef={actionRef}
         request={async (params) => {
-          const { data, success } = await selectPageUser({
+          const { data, success } = await selectPageRole({
             ...params
           });
           return {

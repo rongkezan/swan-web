@@ -61,7 +61,7 @@ export const selectPageUser = async (
 
 /** 角色相关 */
 export const saveRole = async (
-  body: API_USER.Role
+  body: API_USER.User
 ) => {
   return request<API_COMMON.Result<void>>('/user/saveRole', {
     method: POST_METHOD,
@@ -70,7 +70,7 @@ export const saveRole = async (
 }
 
 export const updateRoleStatus = async (
-  body: API_USER.Role
+  body: API_USER.User
 ) => {
   return request<API_COMMON.Result<void>>('/user/updateRoleStatus', {
     method: POST_METHOD,
@@ -93,7 +93,7 @@ export const selectPageRole = async (
     status?: boolean;
   } & API_COMMON.PageParam
 ) => {
-  return request<API_COMMON.Result<API_USER.Role>>('/user/selectPageRole', {
+  return request<API_COMMON.Result<API_COMMON.Page<API_USER.Role>>>('/user/selectPageRole', {
     method: POST_METHOD,
     data: body
   })
@@ -105,7 +105,7 @@ export const selectListRole = async (
     status?: boolean;
   }
 ) => {
-  return request<API_COMMON.Result<API_USER.Role[]>>('/user/selectListRole', {
+  return request<API_COMMON.Result<API_USER.User[]>>('/user/selectListRole', {
     method: POST_METHOD,
     data: body
   })

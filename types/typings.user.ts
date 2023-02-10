@@ -26,6 +26,7 @@ declare namespace API_USER {
     createTime?: string;
     updateTime?: string;
     perms?: Perm[];
+    permIds: string[];
   }
 
   type Perm = {
