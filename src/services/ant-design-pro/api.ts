@@ -5,7 +5,7 @@ import { request } from '@umijs/max';
 /** 获取当前的用户 */
 export async function currentUser(options?: { [key: string]: any }) {
   return request<{
-    data: API.UserVo;
+    data: API_USER.User;
   }>('/user/profile', {
     method: 'POST',
     ...(options || {}),
@@ -22,7 +22,7 @@ export async function outLogin(options?: { [key: string]: any }) {
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.Result<void>>('/user/signIn', {
+  return request<API_COMMON.Result<void>>('/user/signIn', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

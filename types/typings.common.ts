@@ -19,8 +19,12 @@ declare namespace API_COMMON {
     records?: Array<T>;
   }
 
-  type PageParams = {
+  type PageParam = {
     current?: number;
     pageSize?: number;
+  }
+
+  type IdParam = {
+    id: string
   }
 }

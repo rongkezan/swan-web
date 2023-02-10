@@ -18,42 +18,25 @@ export default [
     component: './Login',
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    path: '/user',
-    name: '用户管理',
-    component: './User',
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
+    name: '系统管理',
+    path: '/system',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
+        name: '用户管理',
+        path: '/system/user',
+        component: './System/User'
       },
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        name: '角色管理',
+        path: '/system/role',
+        component: './System/Role'
       },
-    ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
-    path: '/',
-    redirect: '/welcome',
+      {
+        name: '权限管理',
+        path: '/system/perm',
+        component: './System/Perm'
+      },
+    ]
   },
   {
     path: '*',
