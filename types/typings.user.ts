@@ -36,8 +36,6 @@ declare namespace API_USER {
     permKey?: string;
     permType?: string;
     orderNum?: number;
-    routePath?: string;
-    menuIcon?: string;
     status?: number;
     createTime?: string;
     updateTime?: string;

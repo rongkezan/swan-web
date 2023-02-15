@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormText, PageContainer, ProFormTreeSelect } from '@ant-design/pro-components';
+import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormText, PageContainer, ProFormTreeSelect, ProFormDigit } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Form, message, Popconfirm, Space } from 'antd';
 import services from '@/services';
@@ -26,10 +26,8 @@ export default () => {
   }
 
   const onFinish = async (values: API_USER.Perm) => {
-    const res = await savePerm({
-      ...values,
-      parentId: values.parent?.value
-    })
+    console.log(values)
+    const res = await savePerm(values)
     if (res.success) {
       message.success('提交成功');
       actionRef.current?.reload?.()
@@ -67,16 +65,6 @@ export default () => {
     {
       title: '显示顺序',
       dataIndex: 'orderNum',
-      hideInSearch: true
-    },
-    {
-      title: '路由地址',
-      dataIndex: 'routePath',
-      hideInSearch: true
-    },
-    {
-      title: '菜单图标',
-      dataIndex: 'menuIcon',
       hideInSearch: true
     },
     {
@@ -133,33 +121,11 @@ export default () => {
         onFinish={onFinish}
         initialValues={{ permType: 'C', status: true, parent: { value: 0 }, orderNum: 1 }}
       >
-        <ProForm.Group>
-          <ProFormText width="md" name="id" label="权限ID" disabled hidden />
-          <ProFormText width="md" name="permName" label="权限名称" />
-          <ProFormText width="md" name="permKey" label="权限标识" placeholder="请输入" />
-          <ProFormText width="md" name="orderNum" label="显示顺序" placeholder="请输入" />
-          <ProFormText width="md" name="routePath" label="路由地址" placeholder="请输入" />
-          <ProFormText width="md" name="menuIcon" label="菜单图标" placeholder="请输入" />
-          <ProFormRadio.Group width="md" name="permType" label="权限类型"
-            options={[
-              {
-                label: '目录',
-                value: 'C'
-              },
-              {
-                label: '菜单',
-                value: 'M'
-              },
-              {
-                label: '功能',
-                value: 'F'
-              }
-            ]} />
-        </ProForm.Group>
+        <ProFormText width="md" name="id" label="权限ID" disabled hidden />
         <ProForm.Group>
           <ProFormTreeSelect
             width="md"
-            name="parent"
+            name="parentId"
             label="父权限"
             request={async () => {
               const res = await selectListPermOptions()
@@ -176,9 +142,31 @@ export default () => {
               }
             }}
           />
+        <ProFormText width="md" name="permName" label="权限名称" />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormText width="md" name="permKey" label="权限标识" placeholder="请输入" />
+          <ProFormDigit width="md" name="orderNum" label="显示顺序" placeholder="请输入" />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormRadio.Group width="md" name="permType" label="权限类型"
+            options={[
+              {
+                label: '目录',
+                value: 'C'
+              },
+              {
+                label: '菜单',
+                value: 'M'
+              },
+              {
+                label: '功能',
+                value: 'F'
+              }
+            ]} />
           <ProFormRadio.Group
             name="status"
-            width="lg"
+            width="md"
             label="状态"
             options={STATUS_OPTIONS}
           />
