@@ -1,25 +1,37 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormText, PageContainer, ProFormDigit } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, Form, Input, message, Popconfirm, Space, Tree } from 'antd';
+import { Button, Form, message, Popconfirm, Space, Tree } from 'antd';
 import services from '@/services';
 import { useEffect, useRef, useState } from 'react';
-import { selectListPerm, selectPageRole } from '@/services/user/UserController';
 import { STATUS_OPTIONS } from '@/constants';
+import { deleteRole } from '@/services/user/UserController';
 
-const { saveRole } = services.UserController;
+const { saveRole, selectListPermOptions, selectPageRole } = services.UserController;
 
 export default () => {
 
   const [form] = Form.useForm<API_USER.Role>();
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
-  const [modalTreeData, setModalTreeData] = useState([])
+  const [modalTreeData, setModalTreeData] = useState<any>([])
 
-  const [checkedPermKeys, setCheckedPermKeys] = useState([])
+  const [checkedPermKeys, setCheckedPermKeys] = useState<string[]>()
 
   const actionRef = useRef<ActionType>();
+
+  useEffect(() => {
+    const loadPermOptions = async () => {
+      const res = await selectListPermOptions();
+      if (res.success) {
+        setModalTreeData(res.data)
+      } else {
+        message.error(res.msg)
+      }
+    }
+    loadPermOptions();
+  }, [])
 
   const onCheckPermissions = (checkedKeys: any) => {
     setCheckedPermKeys(checkedKeys)
@@ -27,19 +39,32 @@ export default () => {
 
   const onEdit = (record: API_USER.Role) => {
     form.resetFields()
-    form.setFieldsValue({
-      ...record,
-      permIds: record.perms?.map(perm => (perm.id))
-    })
+    form.setFieldsValue(record)
+    setCheckedPermKeys(record.perms?.map(perm => (perm.id)) as string[])
     setIsModalOpen(true)
   }
 
-  const onDelete = (record: API_USER.Role) => {
-    console.log(record)
+  const onAdd = () => {
+    setIsModalOpen(true)
+    form.resetFields()
+    setCheckedPermKeys([])
+  }
+
+  const onDelete = async (record: API_USER.Role) => {
+    const res = await deleteRole({ id: record.id as string })
+    if (res.success) {
+      message.success(res.msg)
+      actionRef.current?.reload?.()
+    } else {
+      message.error(res.msg)
+    }
   }
 
   const onFinish = async (record: API_USER.Role) => {
-    const res = await saveRole(record)
+    const res = await saveRole({
+      ...record,
+      permIds: checkedPermKeys as string[]
+    })
     if (res.success) {
       message.success('提交成功');
       actionRef.current?.reload?.()
@@ -102,7 +127,6 @@ export default () => {
               />
             </Popconfirm>
           </Space>
-
         )
       }
     },
@@ -118,6 +142,7 @@ export default () => {
         onOpenChange={setIsModalOpen}
         autoFocusFirstInput
         onFinish={onFinish}
+        initialValues={{ orderNum: 1, status: true }}
       >
         <ProForm.Group>
           <ProFormText width="md" name="id" label="角色ID" disabled />
@@ -129,7 +154,7 @@ export default () => {
             label="状态"
             options={STATUS_OPTIONS}
           />
-          <Form.Item label="菜单权限">
+          <Form.Item label="菜单权限" name="permIds">
             <Tree
               checkable
               onCheck={onCheckPermissions}
@@ -137,7 +162,6 @@ export default () => {
               treeData={modalTreeData}
             />
           </Form.Item>
-
         </ProForm.Group>
       </ModalForm>
       <ProTable<API_USER.Role>
@@ -175,7 +199,7 @@ export default () => {
         pagination={{ pageSize: 5 }}
         dateFormatter="string"
         toolBarRender={() => [
-          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setIsModalOpen(true)}>
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={onAdd}>
             新建
           </Button>
         ]}

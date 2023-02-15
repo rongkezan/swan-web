@@ -42,5 +42,6 @@ declare namespace API_USER {
     createTime?: string;
     updateTime?: string;
     children?: Perm[];
+    [key: string]: any;
   }
 }

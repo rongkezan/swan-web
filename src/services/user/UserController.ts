@@ -2,6 +2,7 @@
 /* eslint-disable */
 
 import { POST_METHOD } from '@/constants'
+import { RequestOptionsType } from '@ant-design/pro-components'
 import { request } from '@umijs/max'
 
 /** 登录注册相关 */
@@ -61,7 +62,7 @@ export const selectPageUser = async (
 
 /** 角色相关 */
 export const saveRole = async (
-  body: API_USER.User
+  body: API_USER.Role
 ) => {
   return request<API_COMMON.Result<void>>('/user/saveRole', {
     method: POST_METHOD,
@@ -135,10 +136,16 @@ export const selectListPerm = async (
     permName?: string;
     permKey?: string;
     status?: boolean;
-  }
+  } & API_COMMON.PageParam
 ) => {
   return request<API_COMMON.Result<API_USER.Perm[]>>('/user/selectListPerm', {
     method: POST_METHOD,
     data: body
+  })
+}
+
+export const selectListPermOptions = async () => {
+  return request<API_COMMON.Result<any>>('/user/selectListPermOptions', {
+    method: POST_METHOD
   })
 }

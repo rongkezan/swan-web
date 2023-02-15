@@ -1,46 +1,35 @@
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormSelect, ProFormText, PageContainer } from '@ant-design/pro-components';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormText, PageContainer, ProFormTreeSelect, RequestOptionsType, ProFieldRequestData } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, Form, message } from 'antd';
+import { Button, Form, message, Popconfirm, Space } from 'antd';
 import services from '@/services';
-import { useEffect, useRef, useState } from 'react';
-import { selectListRole } from '@/services/user/UserController';
+import { useRef, useState } from 'react';
+import { STATUS_OPTIONS } from '@/constants';
 
-const { selectPageUser, updateUser } = services.UserController;
+const { deletePerm, savePerm, selectListPerm, selectListPermOptions } = services.UserController;
 
 export default () => {
 
-  const [form] = Form.useForm<API_USER.User>();
+  const [form] = Form.useForm<API_USER.Perm>();
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const [roleOptions, setRoleOptions] = useState<Array<API_USER.User>>([])
-
   const actionRef = useRef<ActionType>();
 
-  useEffect(() => {
-    const loadRoles = async () => {
-      const res = await selectListRole({})
-      if (res.success) {
-        setRoleOptions(res.data as Array<API_USER.User>)
-      } else {
-        message.error(res.msg)
-      }
-    }
-    loadRoles()
-  }, [])
-
-  const onEdit = (values: API_USER.User) => {
+  const onEdit = (values: API_USER.Perm) => {
     form.resetFields()
     form.setFieldsValue({
       ...values,
-      roleIds: values.roles?.map(role => (role.roleId))
+      parent: values.parentId
     })
     setIsModalOpen(true)
   }
 
-  const onFinish = async (values: API_USER.User) => {
-    const res = await updateUser(values)
+  const onFinish = async (values: API_USER.Perm) => {
+    const res = await savePerm({
+      ...values,
+      parentId: values.parent?.value
+    })
     if (res.success) {
       message.success('提交成功');
       actionRef.current?.reload?.()
@@ -51,23 +40,44 @@ export default () => {
     }
   }
 
-  const columns: ProColumns<API_USER.User>[] = [
+  const onDelete = async (values: API_USER.Perm) => {
+    const res = await deletePerm({ id: values.id as string });
+    if (res.success) {
+      message.success(res.msg)
+      actionRef.current?.reload?.()
+    } else {
+      message.error(res.msg)
+    }
+  }
+
+  const onAdd = async () => {
+    form.resetFields()
+    setIsModalOpen(true)
+  }
+
+  const columns: ProColumns<API_USER.Perm>[] = [
     {
-      dataIndex: 'ID',
-      valueType: 'indexBorder',
-      width: 48,
+      title: '权限名称',
+      dataIndex: 'permName'
     },
     {
-      title: '用户名',
-      dataIndex: 'username'
+      title: '权限标识',
+      dataIndex: 'permType'
     },
     {
-      title: '手机号',
-      dataIndex: 'phone'
+      title: '显示顺序',
+      dataIndex: 'orderNum',
+      hideInSearch: true
     },
     {
-      title: '真实姓名',
-      dataIndex: 'realName'
+      title: '路由地址',
+      dataIndex: 'routePath',
+      hideInSearch: true
+    },
+    {
+      title: '菜单图标',
+      dataIndex: 'menuIcon',
+      hideInSearch: true
     },
     {
       title: '状态',
@@ -92,11 +102,21 @@ export default () => {
       key: 'option',
       render: (_, record) => {
         return (
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<EditOutlined />}
-            onClick={() => onEdit(record)} />
+          <Space>
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => onEdit(record)} />
+            <Popconfirm title="确认要删除吗" onConfirm={() => onDelete(record)} okText="确认" cancelText="取消">
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
+          </Space>
         )
       }
     },
@@ -104,68 +124,76 @@ export default () => {
 
   return (
     <PageContainer>
-      <ModalForm<API_USER.User>
-        title="用户信息"
+      <ModalForm<API_USER.Perm>
+        title="权限信息"
         form={form}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         autoFocusFirstInput
         onFinish={onFinish}
+        initialValues={{ permType: 'C', status: true, parent: { value: 0 }, orderNum: 1 }}
       >
         <ProForm.Group>
-          <ProFormText width="md" name="id" label="用户ID" disabled />
-          <ProFormText width="md" name="username" label="用户名" disabled />
-          <ProFormText width="md" name="phone" label="手机号" placeholder="请输入" />
-          <ProFormText width="md" name="realName" label="真实姓名" placeholder="请输入" />
-          <ProFormText width="md" name="avatar" label="头像" placeholder="请输入" />
-          <ProFormSelect width="md"
-            name="roleIds"
-            label="角色"
-            mode="multiple"
-            options={roleOptions.map(role => ({ label: role.roleName, value: role.id }))}
-          />
-          <ProFormRadio.Group
-            name="gender"
-            label="性别"
+          <ProFormText width="md" name="id" label="权限ID" disabled hidden />
+          <ProFormText width="md" name="permName" label="权限名称" />
+          <ProFormText width="md" name="permKey" label="权限标识" placeholder="请输入" />
+          <ProFormText width="md" name="orderNum" label="显示顺序" placeholder="请输入" />
+          <ProFormText width="md" name="routePath" label="路由地址" placeholder="请输入" />
+          <ProFormText width="md" name="menuIcon" label="菜单图标" placeholder="请输入" />
+          <ProFormRadio.Group width="md" name="permType" label="权限类型"
             options={[
               {
-                label: '男',
-                value: 1,
+                label: '目录',
+                value: 'C'
               },
               {
-                label: '女',
-                value: 2,
+                label: '菜单',
+                value: 'M'
+              },
+              {
+                label: '功能',
+                value: 'F'
               }
-            ]}
+            ]} />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormTreeSelect
+            width="md"
+            name="parent"
+            label="父权限"
+            request={async () => {
+              const res = await selectListPermOptions()
+              if (res.success) {
+                const arr = res.data
+                arr?.push({
+                  value: '0',
+                  label: '顶层菜单'
+                })
+                return arr
+              } else {
+                message.error(res.msg)
+                return []
+              }
+            }}
           />
           <ProFormRadio.Group
             name="status"
-            width="md"
+            width="lg"
             label="状态"
-            options={[
-              {
-                label: '禁用',
-                value: false,
-              },
-              {
-                label: '启用',
-                value: true,
-              }
-            ]}
+            options={STATUS_OPTIONS}
           />
         </ProForm.Group>
       </ModalForm>
-      <ProTable<API_USER.User>
+      <ProTable<API_USER.Perm>
         columns={columns}
         cardBordered
         actionRef={actionRef}
         request={async (params) => {
-          const { data, success } = await selectPageUser({
+          const { data, success } = await selectListPerm({
             ...params
           });
           return {
-            data: data?.records || [],
-            total: data?.total || 0,
+            data: data || [],
             success
           }
         }}
@@ -190,7 +218,7 @@ export default () => {
         pagination={{ pageSize: 5 }}
         dateFormatter="string"
         toolBarRender={() => [
-          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setIsModalOpen(true)}>
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={onAdd}>
             新建
           </Button>
         ]}
