@@ -2,7 +2,6 @@
 /* eslint-disable */
 
 import { POST_METHOD } from '@/constants'
-import { RequestOptionsType } from '@ant-design/pro-components'
 import { request } from '@umijs/max'
 
 /** 登录注册相关 */

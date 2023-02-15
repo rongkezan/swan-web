@@ -1,20 +1,15 @@
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
-import {
-  LockOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, SelectLang, useModel, Helmet } from '@umijs/max';
 import { message, Tabs } from 'antd';
 import Settings from '../../../config/defaultSettings';
 import React from 'react';
 import { flushSync } from 'react-dom';
+import services from '@/services';
+
+const { signIn } = services.UserController;
 
 const Lang = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -66,10 +61,10 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     // 登录
-    const res = await login(values);
+    const res = await signIn(values);
     if (res.success) {
       message.success(res.msg);
-      window.localStorage.setItem('token',`${res.data}`)
+      window.localStorage.setItem('token', `${res.data}`)
       await fetchUserInfo();
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
@@ -83,7 +78,7 @@ const Login: React.FC = () => {
     <div className={containerClassName}>
       <Helmet>
         <title>
-            登录页
+          登录页
           - {Settings.title}
         </title>
       </Helmet>
@@ -102,9 +97,7 @@ const Login: React.FC = () => {
           logo={<img alt="logo" src="/logo.svg" />}
           title="Ant Design"
           subTitle="Ant Design Subtitle"
-          initialValues={{
-            autoLogin: true,
-          }}
+          initialValues={{ autoLogin: true }}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
@@ -159,13 +152,7 @@ const Login: React.FC = () => {
             <ProFormCheckbox noStyle name="autoLogin">
               自动登录
             </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              忘记密码
-            </a>
+            <a style={{ float: 'right' }}>忘记密码</a>
           </div>
         </LoginForm>
       </div>
