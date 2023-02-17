@@ -1,4 +1,4 @@
-export namespace API {
+declare namespace API {
   type Result<T> = {
     code?: number;
     success?: boolean;

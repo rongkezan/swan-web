@@ -3,7 +3,6 @@
 
 import { POST_METHOD } from '@/constants'
 import { request } from '@umijs/max'
-import { API } from 'types'
 
 /** 登录注册相关 */
 export const profile = async () => {
