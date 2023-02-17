@@ -12,7 +12,7 @@ export default () => {
 
   const [form] = Form.useForm<API_USER.Perm>();
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const actionRef = useRef<ActionType>();
 

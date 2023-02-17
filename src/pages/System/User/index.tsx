@@ -4,9 +4,8 @@ import { ProTable } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
 import services from '@/services';
 import { useEffect, useRef, useState } from 'react';
-import { selectListRole } from '@/services/user/UserController';
 
-const { selectPageUser, updateUser } = services.UserController;
+const { selectPageUser, updateUser, selectListRole } = services.UserController;
 
 export default () => {
 
@@ -49,6 +48,11 @@ export default () => {
       message.error(res.msg)
       return false;
     }
+  }
+
+  const onAdd = async () => {
+    form.resetFields()
+    setIsModalOpen(true)
   }
 
   const columns: ProColumns<API_USER.User>[] = [
@@ -190,7 +194,7 @@ export default () => {
         pagination={{ pageSize: 5 }}
         dateFormatter="string"
         toolBarRender={() => [
-          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setIsModalOpen(true)}>
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={onAdd}>
             新建
           </Button>
         ]}
