@@ -6,12 +6,13 @@ import services from '@/services';
 import { useEffect, useRef, useState } from 'react';
 import { STATUS_OPTIONS } from '@/constants';
 import { deleteRole } from '@/services/user/UserController';
+import { API } from 'types';
 
 const { saveRole, selectListPermOptions, selectPageRole } = services.UserController;
 
 export default () => {
 
-  const [form] = Form.useForm<API_USER.Role>();
+  const [form] = Form.useForm<API.Role>();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
@@ -37,7 +38,7 @@ export default () => {
     setCheckedPermKeys(checkedKeys)
   }
 
-  const onEdit = (record: API_USER.Role) => {
+  const onEdit = (record: API.Role) => {
     form.resetFields()
     form.setFieldsValue(record)
     setCheckedPermKeys(record.perms?.map(perm => (perm.id)) as string[])
@@ -50,7 +51,7 @@ export default () => {
     setCheckedPermKeys([])
   }
 
-  const onDelete = async (record: API_USER.Role) => {
+  const onDelete = async (record: API.Role) => {
     const res = await deleteRole({ id: record.id as string })
     if (res.success) {
       message.success(res.msg)
@@ -60,7 +61,7 @@ export default () => {
     }
   }
 
-  const onFinish = async (record: API_USER.Role) => {
+  const onFinish = async (record: API.Role) => {
     const res = await saveRole({
       ...record,
       permIds: checkedPermKeys as string[]
@@ -75,7 +76,7 @@ export default () => {
     }
   }
 
-  const columns: ProColumns<API_USER.Role>[] = [
+  const columns: ProColumns<API.Role>[] = [
     {
       dataIndex: 'ID',
       valueType: 'indexBorder',
@@ -134,7 +135,7 @@ export default () => {
 
   return (
     <PageContainer>
-      <ModalForm<API_USER.Role>
+      <ModalForm<API.Role>
         title="用户信息"
         width={400}
         form={form}
@@ -164,7 +165,7 @@ export default () => {
           </Form.Item>
         </ProForm.Group>
       </ModalForm>
-      <ProTable<API_USER.Role>
+      <ProTable<API.Role>
         columns={columns}
         cardBordered
         actionRef={actionRef}

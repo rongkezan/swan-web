@@ -4,16 +4,17 @@ import { ProTable } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
 import services from '@/services';
 import { useEffect, useRef, useState } from 'react';
+import { API } from 'types';
 
 const { selectPageUser, updateUser, selectListRole } = services.UserController;
 
 export default () => {
 
-  const [form] = Form.useForm<API_USER.User>();
+  const [form] = Form.useForm<API.User>();
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const [roleOptions, setRoleOptions] = useState<Array<API_USER.Role>>([])
+  const [roleOptions, setRoleOptions] = useState<Array<API.Role>>([])
 
   const actionRef = useRef<ActionType>();
 
@@ -21,7 +22,7 @@ export default () => {
     const loadRoles = async () => {
       const res = await selectListRole({})
       if (res.success) {
-        setRoleOptions(res.data as Array<API_USER.Role>)
+        setRoleOptions(res.data as Array<API.Role>)
       } else {
         message.error(res.msg)
       }
@@ -29,7 +30,7 @@ export default () => {
     loadRoles()
   }, [])
 
-  const onEdit = (values: API_USER.User) => {
+  const onEdit = (values: API.User) => {
     form.resetFields()
     form.setFieldsValue({
       ...values,
@@ -38,7 +39,7 @@ export default () => {
     setIsModalOpen(true)
   }
 
-  const onFinish = async (values: API_USER.User) => {
+  const onFinish = async (values: API.User) => {
     const res = await updateUser(values)
     if (res.success) {
       message.success('提交成功');
@@ -55,7 +56,7 @@ export default () => {
     setIsModalOpen(true)
   }
 
-  const columns: ProColumns<API_USER.User>[] = [
+  const columns: ProColumns<API.User>[] = [
     {
       dataIndex: 'ID',
       valueType: 'indexBorder',
@@ -108,7 +109,7 @@ export default () => {
 
   return (
     <PageContainer>
-      <ModalForm<API_USER.User>
+      <ModalForm<API.User>
         title="用户信息"
         form={form}
         open={isModalOpen}
@@ -159,7 +160,7 @@ export default () => {
           />
         </ProForm.Group>
       </ModalForm>
-      <ProTable<API_USER.User>
+      <ProTable<API.User>
         columns={columns}
         cardBordered
         actionRef={actionRef}

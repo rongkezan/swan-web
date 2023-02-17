@@ -1,7 +1,9 @@
+import { API } from "types";
+
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: { currentUser?: API_USER.User } | undefined) {
+export default function access(initialState: { currentUser?: API.User } | undefined) {
   const { currentUser } = initialState ?? {};
   return {
     routeFilter: (route: any) => (

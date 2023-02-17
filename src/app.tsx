@@ -8,7 +8,8 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import React from 'react';
 import { profile } from './services/user/UserController';
-const isDev = process.env.NODE_ENV === 'development';
+import { API } from 'types';
+// const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
 
 /**
@@ -16,9 +17,9 @@ const loginPath = '/login';
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API_USER.User;
+  currentUser?: API.User;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API_USER.User | undefined>;
+  fetchUserInfo?: () => Promise<API.User | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {

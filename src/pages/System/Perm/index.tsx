@@ -5,18 +5,19 @@ import { Button, Form, message, Popconfirm, Space } from 'antd';
 import services from '@/services';
 import { useRef, useState } from 'react';
 import { STATUS_OPTIONS } from '@/constants';
+import { API } from 'types';
 
 const { deletePerm, savePerm, selectListPerm, selectListPermOptions } = services.UserController;
 
 export default () => {
 
-  const [form] = Form.useForm<API_USER.Perm>();
+  const [form] = Form.useForm<API.Perm>();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const actionRef = useRef<ActionType>();
 
-  const onEdit = (values: API_USER.Perm) => {
+  const onEdit = (values: API.Perm) => {
     form.resetFields()
     form.setFieldsValue({
       ...values,
@@ -25,7 +26,7 @@ export default () => {
     setIsModalOpen(true)
   }
 
-  const onFinish = async (values: API_USER.Perm) => {
+  const onFinish = async (values: API.Perm) => {
     console.log(values)
     const res = await savePerm(values)
     if (res.success) {
@@ -38,7 +39,7 @@ export default () => {
     }
   }
 
-  const onDelete = async (values: API_USER.Perm) => {
+  const onDelete = async (values: API.Perm) => {
     const res = await deletePerm({ id: values.id as string });
     if (res.success) {
       message.success(res.msg)
@@ -53,7 +54,7 @@ export default () => {
     setIsModalOpen(true)
   }
 
-  const columns: ProColumns<API_USER.Perm>[] = [
+  const columns: ProColumns<API.Perm>[] = [
     {
       title: '权限名称',
       dataIndex: 'permName'
@@ -112,7 +113,7 @@ export default () => {
 
   return (
     <PageContainer>
-      <ModalForm<API_USER.Perm>
+      <ModalForm<API.Perm>
         title="权限信息"
         form={form}
         open={isModalOpen}
@@ -172,7 +173,7 @@ export default () => {
           />
         </ProForm.Group>
       </ModalForm>
-      <ProTable<API_USER.Perm>
+      <ProTable<API.Perm>
         columns={columns}
         cardBordered
         actionRef={actionRef}

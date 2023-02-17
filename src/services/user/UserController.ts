@@ -3,10 +3,11 @@
 
 import { POST_METHOD } from '@/constants'
 import { request } from '@umijs/max'
+import { API } from 'types'
 
 /** 登录注册相关 */
 export const profile = async () => {
-  return request<API_COMMON.Result<API_USER.User>>('/user/profile', {
+  return request<API.Result<API.User>>('/user/profile', {
     method: POST_METHOD
   })
 }
@@ -17,7 +18,7 @@ export const signIn = async (
     password?: string;
   }
 ) => {
-  return request<API_COMMON.Result<void>>('/user/signIn', {
+  return request<API.Result<void>>('/user/signIn', {
     method: POST_METHOD,
     data: body
   });
@@ -29,7 +30,7 @@ export const signUp = async (
     password?: string;
   }
 ) => {
-  return request<API_COMMON.Result<void>>('/user/signUp', {
+  return request<API.Result<void>>('/user/signUp', {
     method: POST_METHOD,
     data: body
   });
@@ -37,9 +38,9 @@ export const signUp = async (
 
 /** 用户相关 */
 export const updateUser = async (
-  body: API_USER.User
+  body: API.User
 ) => {
-  return request<API_COMMON.Result<void>>('/user/updateUser', {
+  return request<API.Result<void>>('/user/updateUser', {
     method: POST_METHOD,
     data: body
   });
@@ -51,9 +52,9 @@ export const selectPageUser = async (
     phone?: string;
     realName?: string;
     status?: number;
-  } & API_COMMON.PageParam
+  } & API.PageParam
 ) => {
-  return request<API_COMMON.Result<API_COMMON.Page<API_USER.User>>>('/user/selectPageUser', {
+  return request<API.Result<API.Page<API.User>>>('/user/selectPageUser', {
     method: POST_METHOD,
     data: body
   });
@@ -61,27 +62,27 @@ export const selectPageUser = async (
 
 /** 角色相关 */
 export const saveRole = async (
-  body: API_USER.Role
+  body: API.Role
 ) => {
-  return request<API_COMMON.Result<void>>('/user/saveRole', {
+  return request<API.Result<void>>('/user/saveRole', {
     method: POST_METHOD,
     data: body
   });
 }
 
 export const updateRoleStatus = async (
-  body: API_USER.User
+  body: API.User
 ) => {
-  return request<API_COMMON.Result<void>>('/user/updateRoleStatus', {
+  return request<API.Result<void>>('/user/updateRoleStatus', {
     method: POST_METHOD,
     data: body
   });
 }
 
 export const deleteRole = async (
-  body: API_COMMON.IdParam
+  body: { id: string }
 ) => {
-  return request<API_COMMON.Result<void>>('/user/deleteRole', {
+  return request<API.Result<void>>('/user/deleteRole', {
     method: POST_METHOD,
     data: body
   });
@@ -91,9 +92,9 @@ export const selectPageRole = async (
   body: {
     roleName?: string;
     status?: boolean;
-  } & API_COMMON.PageParam
+  } & API.PageParam
 ) => {
-  return request<API_COMMON.Result<API_COMMON.Page<API_USER.Role>>>('/user/selectPageRole', {
+  return request<API.Result<API.Page<API.Role>>>('/user/selectPageRole', {
     method: POST_METHOD,
     data: body
   })
@@ -105,7 +106,7 @@ export const selectListRole = async (
     status?: boolean;
   }
 ) => {
-  return request<API_COMMON.Result<API_USER.User[]>>('/user/selectListRole', {
+  return request<API.Result<API.User[]>>('/user/selectListRole', {
     method: POST_METHOD,
     data: body
   })
@@ -113,18 +114,18 @@ export const selectListRole = async (
 
 /** 权限相关 */
 export const savePerm = async (
-  body: API_USER.Perm
+  body: API.Perm
 ) => {
-  return request<API_COMMON.Result<void>>('/user/savePerm', {
+  return request<API.Result<void>>('/user/savePerm', {
     method: POST_METHOD,
     data: body
   });
 }
 
 export const deletePerm = async (
-  body: API_COMMON.IdParam
+  body: { id: string }
 ) => {
-  return request<API_COMMON.Result<void>>('/user/deletePerm', {
+  return request<API.Result<void>>('/user/deletePerm', {
     method: POST_METHOD,
     data: body
   });
@@ -135,16 +136,16 @@ export const selectListPerm = async (
     permName?: string;
     permKey?: string;
     status?: boolean;
-  } & API_COMMON.PageParam
+  } & API.PageParam
 ) => {
-  return request<API_COMMON.Result<API_USER.Perm[]>>('/user/selectListPerm', {
+  return request<API.Result<API.Perm[]>>('/user/selectListPerm', {
     method: POST_METHOD,
     data: body
   })
 }
 
 export const selectListPermOptions = async () => {
-  return request<API_COMMON.Result<any>>('/user/selectListPermOptions', {
+  return request<API.Result<any>>('/user/selectListPermOptions', {
     method: POST_METHOD
   })
 }
