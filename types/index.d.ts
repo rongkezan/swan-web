@@ -61,4 +61,9 @@ declare namespace API {
     children?: Perm[];
     [key: string]: any;
   }
+
+  type LoginParams = {
+    username?: string;
+    password?: string;
+  }
 }

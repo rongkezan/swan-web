@@ -1,10 +1,9 @@
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormSelect, ProFormText, PageContainer } from '@ant-design/pro-components';
+import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormSelect, ProFormText, PageContainer, ProFormUploadButton } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
 import services from '@/services';
 import { useEffect, useRef, useState } from 'react';
-import { API } from 'types';
 
 const { selectPageUser, updateUser, selectListRole } = services.UserController;
 
@@ -122,7 +121,17 @@ export default () => {
           <ProFormText width="md" name="username" label="用户名" disabled />
           <ProFormText width="md" name="phone" label="手机号" placeholder="请输入" />
           <ProFormText width="md" name="realName" label="真实姓名" placeholder="请输入" />
-          <ProFormText width="md" name="avatar" label="头像" placeholder="请输入" />
+          {/* <ProFormText width="md" name="avatar" label="头像" placeholder="请输入" /> */}
+          <ProFormUploadButton
+            name="upload"
+            label="头像"
+            max={1}
+            fieldProps={{
+              name: 'file',
+              listType: 'picture-card',
+            }}
+            action="/api/minio/upload"
+          />
           <ProFormSelect width="md"
             name="roleIds"
             label="角色"

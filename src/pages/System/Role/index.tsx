@@ -6,7 +6,6 @@ import services from '@/services';
 import { useEffect, useRef, useState } from 'react';
 import { STATUS_OPTIONS } from '@/constants';
 import { deleteRole } from '@/services/user/UserController';
-import { API } from 'types';
 
 const { saveRole, selectListPermOptions, selectPageRole } = services.UserController;
 

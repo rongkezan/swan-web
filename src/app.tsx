@@ -8,7 +8,6 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import React from 'react';
 import { profile } from './services/user/UserController';
-import { API } from 'types';
 // const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
 
@@ -114,7 +113,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request: RequestConfig = {
-  baseURL: "http://127.0.0.1:8081",
+  baseURL: 'http://127.0.0.1:8081',
   timeout: 10000,
   ...errorConfig,
 };

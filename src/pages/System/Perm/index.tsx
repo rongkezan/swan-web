@@ -5,7 +5,6 @@ import { Button, Form, message, Popconfirm, Space } from 'antd';
 import services from '@/services';
 import { useRef, useState } from 'react';
 import { STATUS_OPTIONS } from '@/constants';
-import { API } from 'types';
 
 const { deletePerm, savePerm, selectListPerm, selectListPermOptions } = services.UserController;
 
