@@ -2,11 +2,9 @@ import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
-import { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
-import { history } from '@umijs/max';
+import { history, RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import React from 'react';
 import { profile } from './services/user/UserController';
 // const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
@@ -113,7 +111,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request: RequestConfig = {
-  baseURL: 'http://127.0.0.1:8081',
+  baseURL: BASE_URL,
   timeout: 10000,
   ...errorConfig,
 };

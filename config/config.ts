@@ -7,6 +7,18 @@ import routes from './routes';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
+const ENV_DICT = {
+  dev: {
+    baseUrl: 'http://127.0.0.1:8081',
+  },
+  test: {
+    baseUrl: 'http://127.0.0.1:8082',
+  },
+  pre: {
+    baseUrl: 'http://127.0.0.1:8083',
+  },
+};
+
 export default defineConfig({
   /**
    * @name 开启 hash 模式
@@ -152,4 +164,8 @@ export default defineConfig({
     strategy: 'normal',
   },
   requestRecord: {},
+  define: {
+    REACT_APP_ENV: REACT_APP_ENV || false,
+    BASE_URL: ENV_DICT[REACT_APP_ENV as keyof typeof ENV_DICT].baseUrl,
+  },
 });
