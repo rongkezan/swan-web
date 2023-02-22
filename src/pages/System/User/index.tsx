@@ -1,59 +1,68 @@
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { ActionType, ModalForm, ProColumns, ProForm, ProFormRadio, ProFormSelect, ProFormText, PageContainer, ProFormUploadButton } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
-import { Button, Form, message } from 'antd';
 import services from '@/services';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  ActionType,
+  ModalForm,
+  PageContainer,
+  ProColumns,
+  ProForm,
+  ProFormRadio,
+  ProFormSelect,
+  ProFormText,
+  ProFormUploadButton,
+  ProTable,
+} from '@ant-design/pro-components';
+import { Button, Form, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
 const { selectPageUser, updateUser, selectListRole } = services.UserController;
 
 export default () => {
-
   const [form] = Form.useForm<API.User>();
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [roleOptions, setRoleOptions] = useState<Array<API.Role>>([])
+  const [roleOptions, setRoleOptions] = useState<Array<API.Role>>([]);
 
   const actionRef = useRef<ActionType>();
 
   useEffect(() => {
     const loadRoles = async () => {
-      const res = await selectListRole({})
+      const res = await selectListRole({});
       if (res.success) {
-        setRoleOptions(res.data as Array<API.Role>)
+        setRoleOptions(res.data as Array<API.Role>);
       } else {
-        message.error(res.msg)
+        message.error(res.msg);
       }
-    }
-    loadRoles()
-  }, [])
+    };
+    loadRoles();
+  }, []);
 
   const onEdit = (values: API.User) => {
-    form.resetFields()
+    form.resetFields();
     form.setFieldsValue({
       ...values,
-      roleIds: values.roles?.map(role => (role.roleId))
-    })
-    setIsModalOpen(true)
-  }
+      roleIds: values.roles?.map((role) => role.roleId),
+    });
+    setIsModalOpen(true);
+  };
 
   const onFinish = async (values: API.User) => {
-    const res = await updateUser(values)
+    const res = await updateUser(values);
     if (res.success) {
       message.success('提交成功');
-      actionRef.current?.reload?.()
+      actionRef.current?.reload?.();
       return true;
     } else {
-      message.error(res.msg)
+      message.error(res.msg);
       return false;
     }
-  }
+  };
 
   const onAdd = async () => {
-    form.resetFields()
-    setIsModalOpen(true)
-  }
+    form.resetFields();
+    setIsModalOpen(true);
+  };
 
   const columns: ProColumns<API.User>[] = [
     {
@@ -63,15 +72,15 @@ export default () => {
     },
     {
       title: '用户名',
-      dataIndex: 'username'
+      dataIndex: 'username',
     },
     {
       title: '手机号',
-      dataIndex: 'phone'
+      dataIndex: 'phone',
     },
     {
       title: '真实姓名',
-      dataIndex: 'realName'
+      dataIndex: 'realName',
     },
     {
       title: '状态',
@@ -80,7 +89,7 @@ export default () => {
       valueEnum: {
         null: { text: '全部', status: 'Processing' },
         false: { text: '禁用', status: 'Error' },
-        true: { text: '启用', status: 'Success' }
+        true: { text: '启用', status: 'Success' },
       },
     },
     {
@@ -88,7 +97,7 @@ export default () => {
       key: 'createTime',
       dataIndex: 'createTime',
       valueType: 'date',
-      hideInSearch: true
+      hideInSearch: true,
     },
     {
       title: '操作',
@@ -100,9 +109,10 @@ export default () => {
             type="primary"
             shape="circle"
             icon={<EditOutlined />}
-            onClick={() => onEdit(record)} />
-        )
-      }
+            onClick={() => onEdit(record)}
+          />
+        );
+      },
     },
   ];
 
@@ -130,13 +140,14 @@ export default () => {
               name: 'file',
               listType: 'picture-card',
             }}
-            action="/api/minio/upload"
+            action={`${BASE_URL}/minio/upload`}
           />
-          <ProFormSelect width="md"
+          <ProFormSelect
+            width="md"
             name="roleIds"
             label="角色"
             mode="multiple"
-            options={roleOptions.map(role => ({ label: role.roleName, value: role.id }))}
+            options={roleOptions.map((role) => ({ label: role.roleName, value: role.id }))}
           />
           <ProFormRadio.Group
             name="gender"
@@ -149,7 +160,7 @@ export default () => {
               {
                 label: '女',
                 value: 2,
-              }
+              },
             ]}
           />
           <ProFormRadio.Group
@@ -164,7 +175,7 @@ export default () => {
               {
                 label: '启用',
                 value: true,
-              }
+              },
             ]}
           />
         </ProForm.Group>
@@ -175,17 +186,17 @@ export default () => {
         actionRef={actionRef}
         request={async (params) => {
           const { data, success } = await selectPageUser({
-            ...params
+            ...params,
           });
           return {
             data: data?.records || [],
             total: data?.total || 0,
-            success
-          }
+            success,
+          };
         }}
         columnsState={{
           persistenceKey: 'user-table',
-          persistenceType: 'localStorage'
+          persistenceType: 'localStorage',
         }}
         rowKey="id"
         search={{
@@ -206,7 +217,7 @@ export default () => {
         toolBarRender={() => [
           <Button key="button" icon={<PlusOutlined />} type="primary" onClick={onAdd}>
             新建
-          </Button>
+          </Button>,
         ]}
       />
     </PageContainer>
