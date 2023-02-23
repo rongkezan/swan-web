@@ -1,3 +1,5 @@
+import UploadAvatar from '@/components/Upload/UploadAvatar';
+import { GENDER_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import services from '@/services';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import {
@@ -9,7 +11,6 @@ import {
   ProFormRadio,
   ProFormSelect,
   ProFormText,
-  ProFormUploadButton,
   ProTable,
 } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
@@ -23,6 +24,8 @@ export default () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [roleOptions, setRoleOptions] = useState<Array<API.Role>>([]);
+
+  const [imgUrl, setImgUrl] = useState<string>();
 
   const actionRef = useRef<ActionType>();
 
@@ -44,11 +47,16 @@ export default () => {
       ...values,
       roleIds: values.roles?.map((role) => role.roleId),
     });
+    setImgUrl(values.avatar);
     setIsModalOpen(true);
   };
 
   const onFinish = async (values: API.User) => {
-    const res = await updateUser(values);
+    console.log(imgUrl);
+    const res = await updateUser({
+      ...values,
+      avatar: imgUrl,
+    });
     if (res.success) {
       message.success('提交成功');
       actionRef.current?.reload?.();
@@ -125,59 +133,28 @@ export default () => {
         onOpenChange={setIsModalOpen}
         autoFocusFirstInput
         onFinish={onFinish}
+        initialValues={{ gender: 1, status: true }}
       >
         <ProForm.Group>
           <ProFormText width="md" name="id" label="用户ID" disabled />
           <ProFormText width="md" name="username" label="用户名" disabled />
+        </ProForm.Group>
+        <ProForm.Group>
           <ProFormText width="md" name="phone" label="手机号" placeholder="请输入" />
           <ProFormText width="md" name="realName" label="真实姓名" placeholder="请输入" />
-          {/* <ProFormText width="md" name="avatar" label="头像" placeholder="请输入" /> */}
-          <ProFormUploadButton
-            name="upload"
-            label="头像"
-            max={1}
-            fieldProps={{
-              name: 'file',
-              listType: 'picture-card',
-            }}
-            action={`${BASE_URL}/minio/upload`}
-          />
-          <ProFormSelect
-            width="md"
-            name="roleIds"
-            label="角色"
-            mode="multiple"
-            options={roleOptions.map((role) => ({ label: role.roleName, value: role.id }))}
-          />
-          <ProFormRadio.Group
-            name="gender"
-            label="性别"
-            options={[
-              {
-                label: '男',
-                value: 1,
-              },
-              {
-                label: '女',
-                value: 2,
-              },
-            ]}
-          />
-          <ProFormRadio.Group
-            name="status"
-            width="md"
-            label="状态"
-            options={[
-              {
-                label: '禁用',
-                value: false,
-              },
-              {
-                label: '启用',
-                value: true,
-              },
-            ]}
-          />
+        </ProForm.Group>
+        <ProFormSelect
+          name="roleIds"
+          label="角色"
+          mode="multiple"
+          options={roleOptions.map((role) => ({ label: role.roleName, value: role.id }))}
+        />
+        <ProForm.Group>
+          <ProFormRadio.Group name="gender" label="性别" options={GENDER_OPTIONS} />
+          <ProFormRadio.Group name="status" label="状态" options={STATUS_OPTIONS} />
+          <Form.Item label="头像">
+            <UploadAvatar imgUrl={imgUrl} setImgUrl={setImgUrl} />
+          </Form.Item>
         </ProForm.Group>
       </ModalForm>
       <ProTable<API.User>
