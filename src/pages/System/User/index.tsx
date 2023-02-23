@@ -1,7 +1,7 @@
 import UploadAvatar from '@/components/Upload/UploadAvatar';
 import { GENDER_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import services from '@/services';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import {
   ActionType,
   ModalForm,
@@ -52,7 +52,6 @@ export default () => {
   };
 
   const onFinish = async (values: API.User) => {
-    console.log(imgUrl);
     const res = await updateUser({
       ...values,
       avatar: imgUrl,
@@ -65,11 +64,6 @@ export default () => {
       message.error(res.msg);
       return false;
     }
-  };
-
-  const onAdd = async () => {
-    form.resetFields();
-    setIsModalOpen(true);
   };
 
   const columns: ProColumns<API.User>[] = [
@@ -191,11 +185,6 @@ export default () => {
         }}
         pagination={{ pageSize: 5 }}
         dateFormatter="string"
-        toolBarRender={() => [
-          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={onAdd}>
-            新建
-          </Button>,
-        ]}
       />
     </PageContainer>
   );

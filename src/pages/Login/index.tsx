@@ -1,13 +1,14 @@
 import Footer from '@/components/Footer';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
-import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { history, SelectLang, useModel, Helmet } from '@umijs/max';
-import { message, Tabs } from 'antd';
-import Settings from '../../../config/defaultSettings';
-import React from 'react';
-import { flushSync } from 'react-dom';
 import services from '@/services';
+import { signUp } from '@/services/user/UserController';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ModalForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+import { useEmotionCss } from '@ant-design/use-emotion-css';
+import { Helmet, history, SelectLang, useModel } from '@umijs/max';
+import { message, Space, Tabs } from 'antd';
+import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
+import Settings from '../../../config/defaultSettings';
 
 const { signIn } = services.UserController;
 
@@ -36,13 +37,16 @@ const Lang = () => {
 const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const containerClassName = useEmotionCss(() => {
     return {
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage: "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage:
+        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
       backgroundSize: '100% 100%',
     };
   });
@@ -60,40 +64,67 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (values: API.LoginParams) => {
-    // 登录
     const res = await signIn(values);
     if (res.success) {
       message.success(res.msg);
-      window.localStorage.setItem('token', `${res.data}`)
+      window.localStorage.setItem('token', `${res.data}`);
       await fetchUserInfo();
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
       return;
     } else {
-      message.error(res.msg)
+      message.error(res.msg);
+    }
+  };
+
+  const onFinish = async (values: API.User) => {
+    const res = await signUp(values);
+    if (res.success) {
+      message.success('提交成功');
+      return true;
+    } else {
+      message.error(res.msg);
+      return false;
     }
   };
 
   return (
     <div className={containerClassName}>
+      <ModalForm<API.User>
+        title="注册"
+        width={400}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        autoFocusFirstInput
+        onFinish={onFinish}
+        initialValues={{ gender: 1 }}
+      >
+        <ProFormText
+          width="md"
+          name="username"
+          label="用户名"
+          rules={[{ required: true, message: '请输入用户名!' }]}
+        />
+        <ProFormText.Password
+          width="md"
+          name="password"
+          label="密码"
+          rules={[{ required: true, message: '请输入密码!' }]}
+        />
+        <ProFormText.Password
+          width="md"
+          name="confirmPassword"
+          label="确认密码"
+          rules={[{ required: true, message: '请输入确认密码!' }]}
+        />
+      </ModalForm>
       <Helmet>
-        <title>
-          登录页
-          - {Settings.title}
-        </title>
+        <title>登录页 - {Settings.title}</title>
       </Helmet>
       <Lang />
-      <div
-        style={{
-          flex: '1',
-          padding: '32px 0',
-        }}
-      >
+      <div style={{ flex: '1', padding: '32px 0' }}>
         <LoginForm
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
-          }}
+          contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
           logo={<img alt="logo" src="/logo.svg" />}
           title="Ant Design"
           subTitle="Ant Design Subtitle"
@@ -102,57 +133,36 @@ const Login: React.FC = () => {
             await handleSubmit(values as API.LoginParams);
           }}
         >
-          <Tabs
-            activeKey='account'
-            centered
-            items={[
-              {
-                key: 'account',
-                label: '账户密码登录'
-              }
-            ]}
-          />
+          <Tabs activeKey="account" centered items={[{ key: 'account', label: '账户密码登录' }]} />
 
           <>
             <ProFormText
               name="username"
-              fieldProps={{
-                size: 'large',
-                prefix: <UserOutlined />,
-              }}
-              placeholder='用户名'
-              rules={[
-                {
-                  required: true,
-                  message: '请输入用户名!',
-                },
-              ]}
+              fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
+              placeholder="用户名"
+              rules={[{ required: true, message: '请输入用户名!' }]}
             />
             <ProFormText.Password
               name="password"
-              fieldProps={{
-                size: 'large',
-                prefix: <LockOutlined />,
-              }}
-              placeholder='密码'
-              rules={[
-                {
-                  required: true,
-                  message: '请输入密码！'
-                },
-              ]}
+              fieldProps={{ size: 'large', prefix: <LockOutlined /> }}
+              placeholder="密码"
+              rules={[{ required: true, message: '请输入密码！' }]}
             />
           </>
 
-          <div
-            style={{
-              marginBottom: 24,
-            }}
-          >
+          <div style={{ marginBottom: 24 }}>
             <ProFormCheckbox noStyle name="autoLogin">
               自动登录
             </ProFormCheckbox>
-            <a style={{ float: 'right' }}>忘记密码</a>
+            <Space style={{ float: 'right' }}>
+              <a
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                注册
+              </a>
+            </Space>
           </div>
         </LoginForm>
       </div>
