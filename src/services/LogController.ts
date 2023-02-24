@@ -10,7 +10,20 @@ export const selectPageLogin = async (
     result?: boolean;
   } & API.PageParam,
 ) => {
-  return request<API.Result<API.Page<API.LoginLog>>>('/log/selectPageLogin', {
+  return request<API.Result<API.Page<API.LogLogin>>>('/log/selectPageLogin', {
+    method: POST_METHOD,
+    data: body,
+  });
+};
+
+export const selectPageOperation = async (
+  body: {
+    username?: string;
+    url?: string;
+    description?: string;
+  } & API.PageParam,
+) => {
+  return request<API.Result<API.Page<API.LogOperation>>>('/log/selectPageOperation', {
     method: POST_METHOD,
     data: body,
   });

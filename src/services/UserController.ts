@@ -59,13 +59,6 @@ export const saveRole = async (body: API.Role) => {
   });
 };
 
-export const updateRoleStatus = async (body: API.User) => {
-  return request<API.Result<void>>('/user/updateRoleStatus', {
-    method: POST_METHOD,
-    data: body,
-  });
-};
-
 export const deleteRole = async (body: { id: string }) => {
   return request<API.Result<void>>('/user/deleteRole', {
     method: POST_METHOD,

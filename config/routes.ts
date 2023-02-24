@@ -55,7 +55,7 @@ export default [
       {
         name: '操作日志',
         path: '/log/operation',
-        component: './System/Role',
+        component: './Log/Operation',
         access: 'routeFilter',
       },
     ],

@@ -62,12 +62,27 @@ declare namespace API {
     [key: string]: any;
   };
 
-  type LoginLog = {
+  type LogLogin = {
     id?: string;
     username?: string;
     ip?: string;
     result?: string;
     resultMsg?: string;
+    createTime?: string;
+    updateTime?: string;
+    [key: string]: any;
+  };
+
+  type LogOperation = {
+    id?: string;
+    username?: string;
+    ip?: string;
+    url?: string;
+    headers?: string;
+    queryString?: string;
+    args?: string;
+    classMethod?: string;
+    description?: string;
     createTime?: string;
     updateTime?: string;
     [key: string]: any;

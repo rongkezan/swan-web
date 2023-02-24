@@ -4,7 +4,7 @@ import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components'
 const { selectPageLogin } = services.LogController;
 
 export default () => {
-  const columns: ProColumns<API.LoginLog>[] = [
+  const columns: ProColumns<API.LogLogin>[] = [
     {
       dataIndex: 'ID',
       valueType: 'indexBorder',
@@ -45,7 +45,7 @@ export default () => {
 
   return (
     <PageContainer>
-      <ProTable<API.LoginLog>
+      <ProTable<API.LogLogin>
         columns={columns}
         cardBordered
         request={async (params) => {
