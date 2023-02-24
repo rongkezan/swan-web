@@ -1,6 +1,4 @@
-﻿import access from "@/access";
-
-/**
+﻿/**
  * @name umi 的路由配置
  * @description 只支持 path,component,routes,redirect,wrappers,name,icon 的配置
  * @param path  path 只支持两种占位符配置，第一种是动态参数 :id 的形式，第二种是 * 通配符，通配符只能出现路由字符串的最后。
@@ -27,21 +25,21 @@ export default [
         name: '用户管理',
         path: '/system/user',
         component: './System/User',
-        access: 'routeFilter'
+        access: 'routeFilter',
       },
       {
         name: '角色管理',
         path: '/system/role',
         component: './System/Role',
-        access: 'routeFilter'
+        access: 'routeFilter',
       },
       {
         name: '权限管理',
         path: '/system/perm',
         component: './System/Perm',
-        access: 'routeFilter'
+        access: 'routeFilter',
       },
-    ]
+    ],
   },
 
   {
@@ -51,16 +49,16 @@ export default [
       {
         name: '登录日志',
         path: '/log/login',
-        component: './System/User',
-        access: 'routeFilter'
+        component: './Log/Login',
+        access: 'routeFilter',
       },
       {
         name: '操作日志',
         path: '/log/operation',
         component: './System/Role',
-        access: 'routeFilter'
-      }
-    ]
+        access: 'routeFilter',
+      },
+    ],
   },
   {
     path: '*',

@@ -4,8 +4,8 @@ declare namespace API {
     success?: boolean;
     msg?: string;
     traceId?: string;
-    data?: T
-  }
+    data?: T;
+  };
 
   type Page<T> = {
     total?: number;
@@ -13,12 +13,12 @@ declare namespace API {
     current?: number;
     totalPage?: number;
     records?: T[];
-  }
+  };
 
   type PageParam = {
     current?: number;
     pageSize?: number;
-  }
+  };
 
   type User = {
     id?: string;
@@ -30,11 +30,11 @@ declare namespace API {
     status?: number;
     createTime?: string;
     updateTime?: string;
-    roles?: { roleId: string, roleName: string }[];
+    roles?: { roleId: string; roleName: string }[];
     roleIds?: string[];
     perms?: Perm[];
     [key: string]: any;
-  }
+  };
 
   type Role = {
     id?: string;
@@ -46,7 +46,7 @@ declare namespace API {
     perms?: Perm[];
     permIds: string[];
     [key: string]: any;
-  }
+  };
 
   type Perm = {
     id?: string;
@@ -60,10 +60,21 @@ declare namespace API {
     updateTime?: string;
     children?: Perm[];
     [key: string]: any;
-  }
+  };
+
+  type LoginLog = {
+    id?: string;
+    username?: string;
+    ip?: string;
+    result?: string;
+    resultMsg?: string;
+    createTime?: string;
+    updateTime?: string;
+    [key: string]: any;
+  };
 
   type LoginParams = {
     username?: string;
     password?: string;
-  }
+  };
 }

@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import services from '@/services';
-import { signUp } from '@/services/user/UserController';
+import { signUp } from '@/services/UserController';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ModalForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';

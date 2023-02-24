@@ -5,7 +5,7 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import { history, RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { profile } from './services/user/UserController';
+import { profile } from './services/UserController';
 // const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
 
