@@ -12,10 +12,10 @@ const ENV_DICT = {
     baseUrl: 'http://127.0.0.1:8081',
   },
   test: {
-    baseUrl: 'http://127.0.0.1:8082',
+    baseUrl: 'http://127.0.0.1:8081',
   },
   pre: {
-    baseUrl: 'http://127.0.0.1:8083',
+    baseUrl: 'http://47.99.125.210/api',
   },
 };
 
