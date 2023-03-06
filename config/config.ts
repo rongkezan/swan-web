@@ -9,10 +9,10 @@ const { REACT_APP_ENV = 'dev' } = process.env;
 
 const ENV_DICT = {
   dev: {
-    baseUrl: 'http://127.0.0.1:8081',
+    baseUrl: 'http://127.0.0.1:8000/api',
   },
   test: {
-    baseUrl: 'http://127.0.0.1:8081',
+    baseUrl: 'http://127.0.0.1:8081/api',
   },
   pre: {
     baseUrl: 'http://47.99.125.210/api',
