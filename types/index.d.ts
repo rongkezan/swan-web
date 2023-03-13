@@ -92,4 +92,92 @@ declare namespace API {
     username?: string;
     password?: string;
   };
+
+  type ProcessDefinition = {
+    id?: string;
+    key?: string;
+    category?: string;
+    description?: string;
+    name?: string;
+    version?: string;
+    resource?: string;
+    deploymentId?: string;
+    diagram?: string;
+    suspended?: string;
+    tenantId?: string;
+    versionTag?: string;
+    historyTimeToLive?: string;
+    startableInTasklist?: string;
+  };
+
+  type ProcessTask = {
+    id?: string;
+    name?: string;
+    assignee?: string;
+    created?: string;
+    due?: string;
+    followUp?: string;
+    lastUpdated?: string;
+    delegationState?: string;
+    description?: string;
+    executionId?: string;
+    owner?: string;
+    parentTaskId?: string;
+    priority?: string;
+    processDefinitionId?: string;
+    processInstanceId?: string;
+    taskDefinitionKey?: string;
+    caseExecutionId?: string;
+    caseInstanceId?: string;
+    caseDefinitionId?: string;
+    suspended?: string;
+    formKey?: string;
+    camundaFormRef?: string;
+    tenantId?: string;
+  };
+
+  type ProcessHistoryTask = {
+    id?: string;
+    processDefinitionKey?: string;
+    processDefinitionId?: string;
+    processInstanceId?: string;
+    executionId?: string;
+    caseDefinitionKey?: string;
+    caseDefinitionId?: string;
+    caseInstanceId?: string;
+    caseExecutionId?: string;
+    activityInstanceId?: string;
+    name?: string;
+    description?: string;
+    deleteReason?: string;
+    owner?: string;
+    assignee?: string;
+    startTime?: string;
+    endTime?: string;
+    duration?: string;
+    taskDefinitionKey?: string;
+    priority?: string;
+    due?: string;
+    parentTaskId?: string;
+    followUp?: string;
+    tenantId?: string;
+    removalTime?: string;
+    rootProcessInstanceId?: string;
+  };
+
+  type ProcessTaskVariable = {
+    key?: string;
+    type?: string;
+    value?: string;
+  };
+
+  type StartProcessDefinitionResult = {
+    id?: string;
+    definitionId?: string;
+    businessKey?: string;
+    caseInstanceId?: string;
+    ended?: string;
+    suspended?: string;
+    tenantId?: string;
+  };
 }

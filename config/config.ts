@@ -15,7 +15,7 @@ const ENV_DICT = {
     baseUrl: 'http://127.0.0.1:8081/api',
   },
   pre: {
-    baseUrl: 'http://47.99.125.210/api',
+    baseUrl: 'https://swan.51nftcard.com/api',
   },
 };
 

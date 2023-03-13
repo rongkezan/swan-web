@@ -41,7 +41,6 @@ export default [
       },
     ],
   },
-
   {
     name: '日志管理',
     path: '/log',
@@ -59,6 +58,30 @@ export default [
         access: 'routeFilter',
       },
     ],
+  },
+  {
+    name: '流程管理',
+    path: '/process',
+    routes: [
+      {
+        name: '流程定义',
+        path: '/process/definition',
+        component: './Process/Definition',
+        access: 'routeFilter',
+      },
+      {
+        name: '流程任务',
+        path: '/process/task',
+        component: './Process/Task',
+        access: 'routeFilter',
+      },
+    ],
+  },
+  {
+    name: '我的任务',
+    path: '/account/task',
+    component: './Process/Task',
+    access: 'routeFilter',
   },
   {
     path: '*',
